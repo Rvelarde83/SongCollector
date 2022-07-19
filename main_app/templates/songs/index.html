@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Song List</h1>
+
+{% for song in songs %}
+  <div class="card">
+    <div class="card-content">
+      <a href="{% url 'detail' song.id %}">
+      <span class="card-title">{{ song.name}}</span>
+      <p>Author: {{ song.author }}</p>
+      
+      </a>
+      {% comment %} {% if song.age > 0 %}
+        <p>Age: {{ song.age }}</p>
+      {% else %}
+        <p>Age: Kitten</p> {% endcomment %}
+      {% comment %} {% endif %} {% endcomment %}
+    </div>
+  </div>
+{% endfor %}
+
+{% endblock %}

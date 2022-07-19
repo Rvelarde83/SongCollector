@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Song Details</h1>
+
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">{{ song.name }}</span>
+    <p>Author: {{ song.author }}</p>
+      <p>Lyrics:  {{ song.lyrics }}</p>
+      <p>Original Key:  {{ song.original_key }}</p>
+      <p>Arranger(s):  {{ song.arranger}}</p>
+      <p>Producer: {{ song.producer}}</p>
+      <hr>
+      <div class="row">
+        <div class="col s6">
+          <h3>{{ song.name }}'s Musicians</h3>
+          {% if song.musicians.count %}
+            {% for musician in song.musicians.all %}
+              <div class="card">
+            <div class="card-content">
+              <span class="card-title">
+                <span >{{ musician.instrument }}: </span> {{ musician.name }}
+                  </span>
+                </div>
+                <div class="card-action">
+                  <form action="{% url 'rm_song_musician' song.id musician.id %}" method="delete">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">remove musician from song </button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <h5>No musicians :(</h5>
+          {% endif %}
+        </div>
+        <!-- Available musicians will come after this line -->
+        <div class="col s6">
+          <h3>Available musicians</h3>
+          {% if musicians.count %}
+            {% for musician in musicians.all %}
+              <div class="card">
+                <div class="card-content">
+                  <span class="card-title">
+                     <span >{{ musician.instrument }}: </span> {{ musician.name }}
+                  </span>
+                </div>
+                <div class="card-action">
+                  <form action="{% url 'assoc_musician' song.id musician.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Add</button>
+                  </form>
+                </div>
+               
+              </div>
+            {% endfor %}
+          {% else %}
+            <h5>{{song.name}} Already Has All musicians Available</h5>
+          {% endif %}
+        </div>
+      </div>
+      <p>Notes:  {{ song.notes}}</p>
+      <iframe>Link: {{ song.link }}</iframe>
+    
+    {% comment %} {% if song.age > 0 %}
+      <p>Age: {{ song.age }}</p>
+    {% else %}
+      <p>Age: Kitten</p>
+    {% endif %} {% endcomment %}
+  </div>
+
+  <div class="card-action">
+    <a href="{% url 'songs_update' song.id %}">Edit</a>
+    <a href="{% url 'songs_delete' song.id %}">Delete</a>
+  </div>
+</div>
+
+{% endblock %}
