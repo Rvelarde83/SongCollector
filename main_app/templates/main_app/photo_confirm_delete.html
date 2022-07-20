@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Delete Photo</h1>
+
+  <h4>Are you sure you want to delete <span class="teal-text">This photo?</span>?</h4>
+  <img class="responsive-img card-panel" src="{{photo.url}}">
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Yes - Delete!" class="btn">
+    <a href="{% url 'musicians_index'  %}">Cancel</a>
+    {% comment %} Note how we are allowing the user to cancel the delete by providing a link back to the detail page.
+
+ {% endcomment %}
+  </form>
+{% endblock %}

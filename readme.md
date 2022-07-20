@@ -23,3 +23,20 @@ song to user, one tomany, one user, many songs
 songs musicians many to many
 needing pictures
 ? 
+
+needing to fix musicians_detail, that's what broken
+musicians on song index have a link to musicans
+
+
+{% for musician in musician_list %}
+  <a href="{% url 'musicians_detail' musician.id %}">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ musician.name }}</span>
+            <p>Instrument: {{ musician.instrument }}</p>
+        </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}

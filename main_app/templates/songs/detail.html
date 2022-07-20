@@ -11,6 +11,12 @@
       <p>Original Key:  {{ song.original_key }}</p>
       <p>Arranger(s):  {{ song.arranger}}</p>
       <p>Producer: {{ song.producer}}</p>
+      <p>Notes:  {{ song.notes}}</p>
+      <div class="card-action">
+        <a href="{% url 'songs_update' song.id %}">Edit</a>
+        <a href="{% url 'songs_delete' song.id %}">Delete</a>
+      </div>
+    </div>
       <hr>
       <div class="row">
         <div class="col s6">
@@ -34,7 +40,10 @@
           {% else %}
             <h5>No musicians :(</h5>
           {% endif %}
+
         </div>
+
+     
         <!-- Available musicians will come after this line -->
         <div class="col s6">
           <h3>Available musicians</h3>
@@ -60,20 +69,12 @@
           {% endif %}
         </div>
       </div>
-      <p>Notes:  {{ song.notes}}</p>
-      <iframe>Link: {{ song.link }}</iframe>
-    
-    {% comment %} {% if song.age > 0 %}
-      <p>Age: {{ song.age }}</p>
-    {% else %}
-      <p>Age: Kitten</p>
-    {% endif %} {% endcomment %}
+      
+     <iframe src= "{{song.links}}" title="{{song.name}}" width="540" height="310"> Link : </video>
+   
+ 
   </div>
 
-  <div class="card-action">
-    <a href="{% url 'songs_update' song.id %}">Edit</a>
-    <a href="{% url 'songs_delete' song.id %}">Delete</a>
-  </div>
-</div>
+ 
 
 {% endblock %}

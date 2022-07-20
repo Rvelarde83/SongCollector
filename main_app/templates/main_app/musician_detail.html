@@ -12,6 +12,10 @@
       </div>
       {% for photo in musician.photo_set.all %}
       <img class="responsive-img card-panel" src="{{photo.url}}">
+      <div class="card-action">
+        {% comment %} <a href="{% url 'photos_update' photo.id %}">Edit Photo</a> {% endcomment %}
+        <a href="{% url 'photo_delete' photo.id %}">Delete Photo</a>
+      </div>
     {% empty %}
       <div class="card-panel teal-text center-align">No Photos Uploaded</div>
     {% endfor %}

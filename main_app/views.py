@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Song, User, Musician, Musician_Photo
+from .models import Song, User, Musician, Photo
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import login
@@ -7,8 +7,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import  SignUpForm
+from django.urls import reverse
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 # from .forms import  SignUpForm
 import uuid
 import boto3
@@ -44,9 +45,32 @@ def songs_detail(request, song_id):
         'song': song,
         'musicians': musicians_song_doesnt_have})
 
+# @login_required
+def add_photo(request, musician_id):
+    # photo-file will be the "name" attribute on the <input type="file">
+    photo_file = request.FILES.get('photo-file', None)
+    if photo_file:
+        s3 = boto3.client('s3')
+        # need a unique "key" for S3 / needs image file extension too
+        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+        # just in case something goes wrong
+        try:
+            s3.upload_fileobj(photo_file, BUCKET, key)
+            # build the full url string
+            url = f"{S3_BASE_URL}{BUCKET}/{key}"
+            # we can assign to musician_id or musician (if you have a musician object)
+            photo = Photo(url=url, musician_id=musician_id)
+            photo.save()
+        except:
+            print('An error occurred uploading file to S3')
+    return redirect('musicians_detail', pk=musician_id)
+
+
+
+
 class SongCreate(LoginRequiredMixin,CreateView):
   model = Song
-  fields = '__all__'
+  fields = ['name', 'author', 'lyrics', 'original_key', 'arranger', 'producer', 'links', 'notes']
   # success_url = '/songs/'
   def form_valid(self, form):
     # Assign the logged in user (self.request.user)
@@ -81,24 +105,7 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)  
 
-def add_photo(request, musician_id):
-    # photo-file will be the "name" attribute on the <input type="file">
-    photo_file = request.FILES.get('photo-file', None)
-    if photo_file:
-        s3 = boto3.client('s3')
-        # need a unique "key" for S3 / needs image file extension too
-        key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
-        # just in case something goes wrong
-        try:
-            s3.upload_fileobj(photo_file, BUCKET, key)
-            # build the full url string
-            url = f"{S3_BASE_URL}{BUCKET}/{key}"
-            # we can assign to musician_id or musician (if you have a musician object)
-            photo = Musician_Photo(url=url, musician_id=musician_id)
-            photo.save()
-        except:
-            print('An error occurred uploading file to S3')
-    return redirect('musicians_detail', musician_id=musician_id)
+
 
 
 
@@ -113,6 +120,7 @@ class MusicianDetail(LoginRequiredMixin,DetailView):
 class MusicianCreate(LoginRequiredMixin,CreateView):
     model = Musician
     fields = '__all__'
+    # success_url: 
 
 
 class MusicianUpdate(LoginRequiredMixin,UpdateView):
@@ -122,7 +130,15 @@ class MusicianUpdate(LoginRequiredMixin,UpdateView):
 
 class MusicianDelete(LoginRequiredMixin,DeleteView):
     model = Musician
-    success_url = '/musicians/'
+    success_url = '/musician/'
+
+class PhotoDelete(LoginRequiredMixin,DeleteView):
+    model = Photo
+    def get_success_url(self):
+       
+        return reverse('musicians_detail', kwargs={'pk': self.object.musician_id})
+
+   
 
 
 

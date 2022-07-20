@@ -33,15 +33,11 @@ class Song(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'song_id': self.id})
 
-class Musician_Photo(models.Model):
-    url = models.CharField(max_length=200)
+class Photo(models.Model):
+    url = models.CharField(max_length=250)
     musician = models.ForeignKey(Musician, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Photo for musician_id: {self.musician_id} @{self.url}"
-
-# Arranger: 
-# Producer:
-# Musicians:
-# Link:
-# Notes:
+     
+    
