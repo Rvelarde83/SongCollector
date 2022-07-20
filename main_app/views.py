@@ -80,7 +80,7 @@ class SongCreate(LoginRequiredMixin,CreateView):
 
 class SongUpdate(LoginRequiredMixin,UpdateView):
   model = Song
-  fields = '__all__'
+  fields = ['name', 'author', 'lyrics', 'original_key', 'arranger', 'producer', 'links', 'notes']
 
 class SongDelete(LoginRequiredMixin,DeleteView):
   model = Song

@@ -26,9 +26,11 @@
               <div class="card">
             <div class="card-content">
               <span class="card-title">
+                <a href="{% url 'musicians_detail' musician.id %}">
                 <span >{{ musician.instrument }}: </span> {{ musician.name }}
                   </span>
                 </div>
+              </a>
                 <div class="card-action">
                   <form action="{% url 'rm_song_musician' song.id musician.id %}" method="delete">
                     {% csrf_token %}
@@ -52,8 +54,10 @@
               <div class="card">
                 <div class="card-content">
                   <span class="card-title">
+                    <a href="{% url 'musicians_detail' musician.id %}">
                      <span >{{ musician.instrument }}: </span> {{ musician.name }}
                   </span>
+                </a>
                 </div>
                 <div class="card-action">
                   <form action="{% url 'assoc_musician' song.id musician.id %}" method="post">
