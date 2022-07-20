@@ -8,7 +8,8 @@ Write notes and add media, keep the personnel involved in your creations organiz
 
 
 
-Some users that already have some content:
-velardeglaser   p: password
-Constelacion    p: Password!1234
-Ramon           p: password
+- Some users that already have some content:
+
+- velardeglaser   p: password
+- Constelacion    p: Password!1234
+- Ramon           p: password
